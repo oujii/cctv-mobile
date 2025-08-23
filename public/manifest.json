@@ -3,7 +3,7 @@
   "short_name": "Vigilance",
   "description": "Professional home security monitoring system",
   "start_url": "/",
-  "display": "standalone",
+  "display": "minimal-ui",
   "background_color": "#101828",
   "theme_color": "#101828",
   "orientation": "portrait",
