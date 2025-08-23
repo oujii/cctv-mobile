@@ -35,10 +35,10 @@ export default function CameraFeed({
     return () => clearTimeout(timer);
   }, []);
 
-  const getPlaceholderImage = () => {
-    // Use real images for better placeholders
-    const images = ['/image1.jpeg', '/image2.jpeg'];
-    return images[parseInt(id) % images.length] || images[0];
+  const getVideoSource = () => {
+    // Use real videos for camera feeds
+    const videos = ['/0823.mp4', '/0824.mp4'];
+    return videos[parseInt(id) % videos.length] || videos[0];
   };
 
   return (
@@ -53,25 +53,18 @@ export default function CameraFeed({
       {/* Camera Feed */}
       {!isLoading && (
         <>
-          {/* For now, use placeholder. In future, this would be a video element */}
-          <Image
-            src={getPlaceholderImage()}
-            alt={`${name} camera feed`}
-            width={600}
-            height={400}
+          {/* Real video feeds */}
+          <video
+            ref={videoRef}
             className={`w-full h-48 object-cover transition-opacity ${
               isActive ? 'opacity-100' : 'opacity-50'
             }`}
-            onError={() => setHasError(true)}
-          />
-          
-          {/* Future video element for real feeds */}
-          <video
-            ref={videoRef}
-            className="hidden w-full h-48 object-cover"
             autoPlay
             muted
+            loop
             playsInline
+            src={getVideoSource()}
+            onError={() => setHasError(true)}
           />
 
           {/* Gradient Overlay */}
