@@ -180,8 +180,14 @@ export default function Dashboard() {
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <span className="h-2 w-2 bg-red-500 rounded-full mr-2"></span>
-                  <span className="text-xs text-red-400">Offline</span>
+                  <Image 
+                    src="/offline.png" 
+                    alt="Offline" 
+                    width={8} 
+                    height={8} 
+                    className="w-2.5 h-2.5 mr-2"
+                  />
+                  <span className="text-xs text-gray-400">Offline</span>
                 </div>
               </div>
             </div>
@@ -202,7 +208,7 @@ export default function Dashboard() {
         </main>
 
         {/* Bottom Navigation Bar */}
-        <footer className="bg-[#1D2939] px-4 py-2 pb-6 sticky bottom-0">
+        <footer className="bg-[#1D2939] px-4 py-2 pb-8 sticky bottom-0">
           <div className="flex justify-around items-center text-gray-400">
             {bottomNavItems.map((item) => (
               <a

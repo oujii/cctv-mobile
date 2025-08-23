@@ -78,17 +78,30 @@ export default function CameraFeed({
             )}
             <div className="flex items-center space-x-2 text-xs text-gray-300 mt-1">
               {/* Radio Waves Icon */}
-              <Image 
-                src="https://img.icons8.com/?id=85686&format=png&size=12&color=E2E8F0" 
-                alt="Signal" 
-                width={12} 
-                height={12} 
-              />
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                viewBox="0 0 512 512" 
+                fill="currentColor" 
+                className="w-3 h-3"
+              >
+                <circle cx="256" cy="256" r="48"/>
+                <path d="M158.6 353.4c-53.4-53.4-53.4-140.2 0-193.6l-30.2-30.2c-70 70-70 183.9 0 253.9l30.2-30.1zM353.4 353.4l30.2 30.2c70-70 70-183.9 0-253.9l-30.2 30.2c53.4 53.4 53.4 140.2 0 193.6zM107 405c-82.7-82.7-82.7-216.7 0-299.3L76.8 75.5c-99.5 99.5-99.5 260.5 0 360l30.2-30.5zM405 405c82.7-82.7 82.7-216.7 0-299.3l30.2-30.2c99.5 99.5 99.5 260.5 0 360L405 405z"/>
+              </svg>
               
               {/* Status Indicator */}
               <div className="flex items-center space-x-1">
-                <div className={`h-1.5 w-1.5 rounded-full ${isActive ? 'bg-green-400' : 'bg-red-400'}`}></div>
-                <span className="text-xs">{isActive ? 'Live' : 'Offline'}</span>
+                {isActive ? (
+                  <div className="h-1.5 w-1.5 rounded-full bg-green-400"></div>
+                ) : (
+                  <Image 
+                    src="/offline.png" 
+                    alt="Offline" 
+                    width={6} 
+                    height={6} 
+                    className="w-1.5 h-1.5"
+                  />
+                )}
+                <span className={`text-xs ${isActive ? 'text-white' : 'text-gray-400'}`}>{isActive ? 'Live' : 'Offline'}</span>
               </div>
 
               {/* Signal Strength - simulated */}
