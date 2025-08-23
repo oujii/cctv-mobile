@@ -36,10 +36,9 @@ export default function CameraFeed({
   }, []);
 
   const getPlaceholderImage = () => {
-    const colors = ['334155', '1E293B', '475569', '64748B'];
-    const color = colors[Math.abs(id.length) % colors.length];
-    const text = placeholder || name.replace(/\s+/g, '+');
-    return `https://placehold.co/600x400/${color}/E2E8F0?text=${text}`;
+    // Use real images for better placeholders
+    const images = ['/image1.jpeg', '/image2.jpeg'];
+    return images[parseInt(id) % images.length] || images[0];
   };
 
   return (

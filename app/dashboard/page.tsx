@@ -202,7 +202,7 @@ export default function Dashboard() {
         </main>
 
         {/* Bottom Navigation Bar */}
-        <footer className="bg-[#1D2939] px-4 py-2 sticky bottom-0">
+        <footer className="bg-[#1D2939] px-4 py-2 pb-6 sticky bottom-0">
           <div className="flex justify-around items-center text-gray-400">
             {bottomNavItems.map((item) => (
               <a
