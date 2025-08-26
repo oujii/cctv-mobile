@@ -76,3 +76,5 @@ Rules:
 - Do not edit `context/*` sources or original `public/media/*` assets.
 - Do not change Tailwind tokens without explicit instruction.
 - Do not introduce runtime network dependencies for scene playback.
+
+- This is a fake mock app for a TV series.

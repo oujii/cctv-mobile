@@ -8,6 +8,7 @@ import CameraFeed from '@/components/CameraFeed';
 export default function Dashboard() {
   const [currentUser, setCurrentUser] = useState('');
   const [activeTab, setActiveTab] = useState('Security');
+  const [userState, setUserState] = useState(1); // 1-4 for the different states
   const router = useRouter();
 
   useEffect(() => {
@@ -27,6 +28,40 @@ export default function Dashboard() {
     localStorage.removeItem('vigilance-auth');
     localStorage.removeItem('vigilance-user');
     router.push('/login');
+  };
+
+  const handleUserTap = () => {
+    setUserState((prevState) => (prevState % 4) + 1);
+  };
+
+  const getUsersConfig = () => {
+    switch (userState) {
+      case 1:
+        return [
+          { name: 'Adam', role: '(You)', isOnline: true, avatar: '/user.png' },
+          { name: 'Carl', role: '(Admin)', isOnline: false, avatar: '/carl-icon.png' }
+        ];
+      case 2:
+        return [
+          { name: 'Adam', role: '(You)', isOnline: true, avatar: '/user.png' },
+          { name: 'Carl', role: '(Admin)', isOnline: true, avatar: '/carl-icon.png' }
+        ];
+      case 3:
+        return [
+          { name: 'Carl', role: '(You)', isOnline: true, avatar: '/carl-icon.png' },
+          { name: 'Adam', role: '(Guest)', isOnline: false, avatar: '/user.png' }
+        ];
+      case 4:
+        return [
+          { name: 'Carl', role: '(You)', isOnline: true, avatar: '/carl-icon.png' },
+          { name: 'Adam', role: '(Guest)', isOnline: true, avatar: '/user.png' }
+        ];
+      default:
+        return [
+          { name: 'Adam', role: '(You)', isOnline: true, avatar: '/user.png' },
+          { name: 'Carl', role: '(Admin)', isOnline: false, avatar: '/carl-icon.png' }
+        ];
+    }
   };
 
   if (!currentUser) {
@@ -144,52 +179,50 @@ export default function Dashboard() {
             
             {/* User Status Section */}
             <div className="space-y-2">
-              {/* Active User "Adam" */}
-              <div className="flex items-center justify-between bg-gray-700/50 p-2 rounded-lg">
-                <div className="flex items-center">
-                  <Image 
-                    src="/user.png" 
-                    alt="Adam's avatar" 
-                    width={32} 
-                    height={32} 
-                    className="mr-3" 
-                  />
-                  <div>
-                    <span className="font-medium">Adam</span>
-                    <span className="text-xs text-gray-400 ml-1">(You)</span>
+              {getUsersConfig().map((user, index) => (
+                <div 
+                  key={`${user.name}-${index}`}
+                  onClick={handleUserTap}
+                  className="flex items-center justify-between bg-gray-700/50 p-2 rounded-lg cursor-pointer hover:bg-gray-700/70 transition-colors active:bg-gray-700/80"
+                >
+                  <div className="flex items-center">
+                    <Image 
+                      src={user.avatar} 
+                      alt={`${user.name}'s avatar`} 
+                      width={32} 
+                      height={32} 
+                      className={`mr-3 ${!user.isOnline ? 'opacity-50' : ''}`}
+                    />
+                    <div>
+                      <span className={`font-medium ${!user.isOnline ? 'text-gray-400' : ''}`}>
+                        {user.name}
+                      </span>
+                      <span className={`text-xs ml-1 ${!user.isOnline ? 'text-gray-500' : 'text-gray-400'}`}>
+                        {user.role}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center">
+                    {user.isOnline ? (
+                      <>
+                        <span className="h-2 w-2 bg-green-500 rounded-full mr-2"></span>
+                        <span className="text-xs text-green-400">Online</span>
+                      </>
+                    ) : (
+                      <>
+                        <Image 
+                          src="/offline.png" 
+                          alt="Offline" 
+                          width={8} 
+                          height={8} 
+                          className="w-2.5 h-2.5 mr-2"
+                        />
+                        <span className="text-xs text-gray-400">Offline</span>
+                      </>
+                    )}
                   </div>
                 </div>
-                <div className="flex items-center">
-                  <span className="h-2 w-2 bg-green-500 rounded-full mr-2"></span>
-                  <span className="text-xs text-green-400">Online</span>
-                </div>
-              </div>
-              {/* Offline User "Carl" */}
-              <div className="flex items-center justify-between bg-gray-700/50 p-2 rounded-lg">
-                <div className="flex items-center">
-                  <Image 
-                    src="/user.png" 
-                    alt="Carl's avatar" 
-                    width={32} 
-                    height={32} 
-                    className="mr-3 opacity-50" 
-                  />
-                  <div>
-                    <span className="font-medium text-gray-400">Carl</span>
-                    <span className="text-xs text-gray-500 ml-1">(Admin)</span>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <Image 
-                    src="/offline.png" 
-                    alt="Offline" 
-                    width={8} 
-                    height={8} 
-                    className="w-2.5 h-2.5 mr-2"
-                  />
-                  <span className="text-xs text-gray-400">Offline</span>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
