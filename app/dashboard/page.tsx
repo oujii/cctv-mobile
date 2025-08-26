@@ -9,6 +9,8 @@ export default function Dashboard() {
   const [currentUser, setCurrentUser] = useState('');
   const [activeTab, setActiveTab] = useState('Security');
   const [userState, setUserState] = useState(1); // 1-4 for the different states
+  const [expandedCameras, setExpandedCameras] = useState<Set<string>>(new Set());
+  const [focusedCamera, setFocusedCamera] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -32,6 +34,46 @@ export default function Dashboard() {
 
   const handleUserTap = () => {
     setUserState((prevState) => (prevState % 4) + 1);
+  };
+
+  const handleCameraTap = (cameraId: string, heightVariant: 'short' | 'full') => {
+    const isExpanded = expandedCameras.has(cameraId);
+    const isFocused = focusedCamera === cameraId;
+    
+    // For cards that start as 'short'
+    if (heightVariant === 'short' && !isExpanded && !isFocused) {
+      // State 1 → State 2: Short → Full height
+      setExpandedCameras(prev => new Set(prev).add(cameraId));
+      setFocusedCamera(null);
+    } else if (heightVariant === 'short' && isExpanded && !isFocused) {
+      // State 2 → State 3: Full → Focused
+      setFocusedCamera(cameraId);
+    } else if (heightVariant === 'short' && isFocused) {
+      // State 3 → State 1: Focused → Short (reset)
+      setFocusedCamera(null);
+      setExpandedCameras(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(cameraId);
+        return newSet;
+      });
+    }
+    
+    // For cards that start as 'full' 
+    else if (heightVariant === 'full' && !isExpanded && !isFocused) {
+      // State 1 → State 2: Full → Focused
+      setFocusedCamera(cameraId);
+    } else if (heightVariant === 'full' && isFocused) {
+      // State 2 → State 3: Focused → Short
+      setFocusedCamera(null);
+      setExpandedCameras(prev => new Set(prev).add(cameraId));
+    } else if (heightVariant === 'full' && isExpanded && !isFocused) {
+      // State 3 → State 1: Short → Full (reset)
+      setExpandedCameras(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(cameraId);
+        return newSet;
+      });
+    }
   };
 
   const getUsersConfig = () => {
@@ -72,13 +114,17 @@ export default function Dashboard() {
 
   // Mock camera data - in real app this would come from API
   const cameras = [
-    { id: '1', name: 'Garage side S3 Pro 2', model: 'S3 Pro 2', isActive: true, placeholder: 'Garage+Feed' },
-    { id: '2', name: 'Back yard S3 Pro 1', model: 'S3 Pro 1', isActive: true, placeholder: 'Backyard+Feed' },
+    { id: '1', name: 'ADC6-10-M022', model: 'PAN 2500 HD', isActive: true, placeholder: 'Garage+Feed', heightVariant: 'full' as const, showGray: true },
+    { id: '2', name: 'JBS-AF-1080P', model: 'PAN 2500 HD', isActive: true, placeholder: 'Backyard+Feed', heightVariant: 'full' as const },
+    { id: '3', name: 'OFC-B3-720P', model: 'PAN 2500 HD', isActive: true, placeholder: 'Office+Feed', heightVariant: 'short' as const },
+    { id: '4', name: 'WSP-C4-1080P', model: 'PAN 2500 HD', isActive: true, placeholder: 'Workshop+Feed', heightVariant: 'short' as const },
+    { id: '5', name: 'FRT-D5-4K', model: 'PAN 2500 HD', isActive: true, placeholder: 'Front+Feed', heightVariant: 'full' as const },
+    { id: '6', name: 'EXT-E6-1080P', model: 'PAN 2500 HD', isActive: true, placeholder: 'Outside2+Feed', heightVariant: 'short' as const },
   ];
 
   // Total camera stats to match reference design
   const totalCameras = 14;
-  const activeCameras = 8;
+  const activeCameras = 14;
 
   const tabs = ['Favorites', 'Security', 'Care', 'Lights'];
   const bottomNavItems = [
@@ -150,7 +196,7 @@ export default function Dashboard() {
                 className="rounded-full" 
               />
               <div className="flex items-center space-x-1">
-                <h2 className="text-sm font-semibold">Wander001 home</h2>
+                <h2 className="text-sm font-semibold">CW001 home</h2>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
@@ -227,17 +273,29 @@ export default function Dashboard() {
           </div>
 
           {/* Camera Feeds */}
-          {cameras.map((camera) => (
-            <CameraFeed
-              key={camera.id}
-              id={camera.id}
-              name={camera.name}
-              model={camera.model}
-              isActive={camera.isActive}
-              placeholder={camera.placeholder}
-              showControls={true}
-            />
-          ))}
+          <div className="relative">
+            {/* Background Overlay for Focus Mode */}
+            {focusedCamera && (
+              <div className="fixed inset-0 bg-black/70 z-40 pointer-events-none" />
+            )}
+            
+            {cameras.map((camera) => (
+              <CameraFeed
+                key={camera.id}
+                id={camera.id}
+                name={camera.name}
+                model={camera.model}
+                isActive={camera.isActive}
+                placeholder={camera.placeholder}
+                showControls={true}
+                heightVariant={camera.heightVariant}
+                isExpanded={expandedCameras.has(camera.id)}
+                isFocused={focusedCamera === camera.id}
+                showGray={camera.showGray}
+                onTap={() => handleCameraTap(camera.id, camera.heightVariant)}
+              />
+            ))}
+          </div>
         </main>
 
         {/* Bottom Navigation Bar */}

@@ -10,6 +10,11 @@ interface CameraFeedProps {
   isActive?: boolean;
   placeholder?: string;
   showControls?: boolean;
+  heightVariant?: 'short' | 'full';
+  isExpanded?: boolean;
+  isFocused?: boolean;
+  showGray?: boolean;
+  onTap?: () => void;
 }
 
 export default function CameraFeed({
@@ -18,7 +23,12 @@ export default function CameraFeed({
   model,
   isActive = true,
   placeholder,
-  showControls = true
+  showControls = true,
+  heightVariant = 'full',
+  isExpanded = false,
+  isFocused = false,
+  showGray = false,
+  onTap
 }: CameraFeedProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [, setHasError] = useState(false);
@@ -41,11 +51,23 @@ export default function CameraFeed({
     return videos[parseInt(id) % videos.length] || videos[0];
   };
 
+  const getHeightClass = () => {
+    if (isFocused) return 'h-64'; // Larger when focused
+    if (isExpanded && heightVariant === 'full') return 'h-32'; // Full cards in short state
+    if (heightVariant === 'short' && !isExpanded) return 'h-32'; // Short cards in default state
+    return 'h-48'; // Full height (default full cards or expanded short cards)
+  };
+
   return (
-    <div className="relative rounded-2xl overflow-hidden mb-4 group">
+    <div 
+      className={`relative rounded-2xl overflow-hidden mb-4 group cursor-pointer transition-all duration-300 ${
+        isFocused ? 'transform scale-105 z-50' : ''
+      }`}
+      onClick={onTap}
+    >
       {/* Loading State */}
       {isLoading && (
-        <div className="w-full h-48 bg-gray-700 animate-pulse flex items-center justify-center">
+        <div className={`w-full ${getHeightClass()} bg-gray-700 animate-pulse flex items-center justify-center`}>
           <div className="text-gray-400 text-sm">Loading feed...</div>
         </div>
       )}
@@ -53,22 +75,31 @@ export default function CameraFeed({
       {/* Camera Feed */}
       {!isLoading && (
         <>
-          {/* Real video feeds */}
-          <video
-            ref={videoRef}
-            className={`w-full h-48 object-cover transition-opacity ${
-              isActive ? 'opacity-100' : 'opacity-50'
-            }`}
-            autoPlay
-            muted
-            loop
-            playsInline
-            src={getVideoSource()}
-            onError={() => setHasError(true)}
-          />
+          {showGray ? (
+            /* Gray placeholder for first camera */
+            <div 
+              className={`w-full ${getHeightClass()} bg-[#808080] transition-all duration-300`}
+            />
+          ) : (
+            /* Real video feeds */
+            <video
+              ref={videoRef}
+              className={`w-full ${getHeightClass()} object-cover transition-all duration-300 ${
+                isActive ? 'opacity-100' : 'opacity-50'
+              }`}
+              autoPlay
+              muted
+              loop
+              playsInline
+              src={getVideoSource()}
+              onError={() => setHasError(true)}
+            />
+          )}
 
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+          {/* Gradient Overlay - skip for gray cameras */}
+          {!showGray && (
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+          )}
 
           {/* Feed Info */}
           <div className="absolute bottom-3 left-3 text-white">
