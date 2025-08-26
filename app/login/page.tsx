@@ -7,15 +7,16 @@ import Image from 'next/image';
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [showInviteMessage, setShowInviteMessage] = useState(true);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    // Simulate coming from an invite link
-    const timer = setTimeout(() => {
+  const handleAcceptInvite = () => {
+    setIsTransitioning(true);
+    setTimeout(() => {
       setShowInviteMessage(false);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
+      setIsTransitioning(false);
+    }, 300); // Small delay for smooth transition
+  };
 
 
   const handleQuickLogin = async () => {
@@ -32,7 +33,9 @@ export default function Login() {
   if (showInviteMessage) {
     return (
       <div className="bg-[#101828] text-white min-h-screen flex flex-col items-center justify-center px-4">
-        <div className="text-center space-y-4">
+        <div className={`text-center space-y-4 transition-all duration-300 ${
+          isTransitioning ? 'transform -translate-x-full opacity-0' : 'transform translate-x-0 opacity-100'
+        }`}>
           <Image 
             src="/logoi.png" 
             alt="VIGILANCE" 
@@ -43,20 +46,35 @@ export default function Login() {
           <div className="bg-[#1D2939] rounded-2xl p-6 max-w-sm">
             <h2 className="text-lg font-semibold mb-2">You&apos;re Invited!</h2>
             <p className="text-gray-300 text-sm mb-4">
-              Carl has invited you to access the Wander001 home security system.
+              Carl has invited you to access the CW001 home security system.
             </p>
-            <div className="flex items-center space-x-3 bg-gray-700/30 rounded-lg p-3">
+            <div className="flex items-center space-x-3 bg-gray-700/30 rounded-lg p-3 mb-6">
               <Image 
-                src="/user.png" 
-                alt="Adam" 
+                src="/carl-icon.png" 
+                alt="Carl" 
                 width={32} 
                 height={32} 
               />
               <div className="text-left">
-                <div className="font-medium">Adam</div>
-                <div className="text-xs text-gray-400">Invited User</div>
+                <div className="font-medium">Carl</div>
+                <div className="text-xs text-gray-400">Has granted you access</div>
               </div>
             </div>
+            
+            <button
+              onClick={handleAcceptInvite}
+              disabled={isTransitioning}
+              className="w-full border border-blue-500 hover:bg-blue-500/10 active:bg-blue-500/20 disabled:opacity-50 text-blue-400 font-semibold py-3.5 px-4 rounded-lg transition-all duration-200 flex items-center justify-center"
+            >
+              {isTransitioning ? (
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 border-2 border-blue-400/30 border-t-blue-400 rounded-full animate-spin"></div>
+                  <span>Loading...</span>
+                </div>
+              ) : (
+                'Continue'
+              )}
+            </button>
           </div>
         </div>
       </div>
