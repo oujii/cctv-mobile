@@ -115,11 +115,11 @@ export default function Dashboard() {
   // Mock camera data - in real app this would come from API
   const cameras = [
     { id: '1', name: 'ADC6-10-M022', model: 'PAN 2500 HD', isActive: true, placeholder: 'Garage+Feed', heightVariant: 'full' as const, showGray: true },
-    { id: '2', name: 'JBS-AF-1080P', model: 'PAN 2500 HD', isActive: true, placeholder: 'Backyard+Feed', heightVariant: 'full' as const },
-    { id: '3', name: 'OFC-B3-720P', model: 'PAN 2500 HD', isActive: true, placeholder: 'Office+Feed', heightVariant: 'short' as const },
-    { id: '4', name: 'WSP-C4-1080P', model: 'PAN 2500 HD', isActive: true, placeholder: 'Workshop+Feed', heightVariant: 'short' as const },
-    { id: '5', name: 'FRT-D5-4K', model: 'PAN 2500 HD', isActive: true, placeholder: 'Front+Feed', heightVariant: 'full' as const },
-    { id: '6', name: 'EXT-E6-1080P', model: 'PAN 2500 HD', isActive: true, placeholder: 'Outside2+Feed', heightVariant: 'short' as const },
+    { id: '2', name: 'BDH4-15-S081', model: 'PAN 2500 HD', isActive: true, placeholder: 'Backyard+Feed', heightVariant: 'full' as const },
+    { id: '3', name: 'CDK2-08-X104', model: 'PAN 2500 HD', isActive: true, placeholder: 'Office+Feed', heightVariant: 'short' as const },
+    { id: '4', name: 'DFL7-22-Y045', model: 'PAN 2500 HD', isActive: true, placeholder: 'Workshop+Feed', heightVariant: 'short' as const },
+    { id: '5', name: 'EGM9-31-Z067', model: 'PAN 2500 HD', isActive: true, placeholder: 'Front+Feed', heightVariant: 'full' as const },
+    { id: '6', name: 'FHN3-17-A129', model: 'PAN 2500 HD', isActive: true, placeholder: 'Outside2+Feed', heightVariant: 'short' as const },
   ];
 
   // Total camera stats to match reference design
