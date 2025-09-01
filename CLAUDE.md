@@ -78,3 +78,4 @@ Rules:
 - Do not introduce runtime network dependencies for scene playback.
 
 - This is a fake mock app for a TV series.
+- @plan.md will serve as our living reference files for this project. you will update it whenever we make changes so we can always track what's been implemented and what's plan. This is to maintain context across sessions

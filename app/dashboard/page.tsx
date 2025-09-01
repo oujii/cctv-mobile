@@ -263,7 +263,7 @@ export default function Dashboard() {
                           height={8} 
                           className="w-2.5 h-2.5 mr-2"
                         />
-                        <span className="text-xs text-gray-400">Offline</span>
+                        <span className="text-xs text-red-500">Offline</span>
                       </>
                     )}
                   </div>

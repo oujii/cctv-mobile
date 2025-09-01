@@ -132,7 +132,7 @@ export default function CameraFeed({
                     className="w-1.5 h-1.5"
                   />
                 )}
-                <span className={`text-xs ${isActive ? 'text-white' : 'text-gray-400'}`}>{isActive ? 'Live' : 'Offline'}</span>
+                <span className={`text-xs ${isActive ? 'text-white' : 'text-red-500'}`}>{isActive ? 'Live' : 'Offline'}</span>
               </div>
 
               {/* Signal Strength - simulated */}
