@@ -78,7 +78,7 @@ export default function CameraFeed({
           {showGray ? (
             /* Green placeholder for first camera (greenscreen for post-production) */
             <div 
-              className={`w-full ${getHeightClass()} bg-[#00FF00] transition-all duration-300`}
+              className={`w-full ${getHeightClass()} bg-[#093] transition-all duration-300`}
             />
           ) : (
             /* Real video feeds */

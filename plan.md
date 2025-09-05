@@ -23,7 +23,7 @@ Mock security camera mobile app for TV/film production. Built with Next.js 15.5.
 - **Focus mode**: Dimmed background + enlarged view
 - **Camera IDs**: Professional format (ADC6-10-M022, JBS-AF-1080P, etc.)
 - **Model standardization**: All cameras show "PAN 2500 HD"
-- **Green camera**: First camera (ADC6-10-M022) shows solid green `#00FF00` for greenscreen post-production
+- **Green camera**: First camera (ADC6-10-M022) shows solid green `#093` for greenscreen post-production
 - **Files modified**: `app/dashboard/page.tsx`, `components/CameraFeed.tsx`
 
 ### Dashboard Updates
@@ -43,7 +43,7 @@ Mock security camera mobile app for TV/film production. Built with Next.js 15.5.
 ## Camera Configuration
 
 ### Current Cameras
-1. **ADC6-10-M022** (full height, green background for greenscreen)
+1. **ADC6-10-M022** (full height, green `#093` background for greenscreen)
 2. **BDH4-15-S081** (full height, video)
 3. **CDK2-08-X104** (short height, video)
 4. **DFL7-22-Y045** (short height, video)
