@@ -11,7 +11,7 @@ export default function Dashboard() {
   const [userState, setUserState] = useState(1); // 1-4 for the different states
   const [expandedCameras, setExpandedCameras] = useState<Set<string>>(new Set());
   const [focusedCamera, setFocusedCamera] = useState<string | null>(null);
-  const [videoState, setVideoState] = useState(1); // 1=day videos, 2=night videos, 3=night videos + green
+  const [videoState, setVideoState] = useState(1); // 1=day videos, 2=day videos + green, 3=night videos, 4=night videos + green
   const router = useRouter();
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function Dashboard() {
   };
 
   const handleVideoStateToggle = () => {
-    setVideoState((prevState) => (prevState % 3) + 1);
+    setVideoState((prevState) => (prevState % 4) + 1);
   };
 
   const handleCameraTap = (cameraId: string, heightVariant: 'short' | 'full') => {
@@ -119,11 +119,11 @@ export default function Dashboard() {
 
   // Mock camera data - in real app this would come from API
   const cameras = [
-    { id: '1', name: 'ADC6-10-M022', model: 'PAN 2500 HD', isActive: true, placeholder: 'Garage+Feed', heightVariant: 'full' as const, showGray: videoState === 3 },
-    { id: '2', name: 'BDH4-15-S081', model: 'PAN 2500 HD', isActive: true, placeholder: 'Backyard+Feed', heightVariant: 'full' as const },
-    { id: '3', name: 'CDK2-08-X104', model: 'PAN 2500 HD', isActive: true, placeholder: 'Office+Feed', heightVariant: 'short' as const },
+    { id: '1', name: 'ADC6-10-M022', model: 'PAN 2500 HD', isActive: true, placeholder: 'Garage+Feed', heightVariant: 'full' as const },
+    { id: '2', name: 'BDH4-15-S081', model: 'PAN 2500 HD', isActive: true, placeholder: 'Backyard+Feed', heightVariant: 'full' as const, showGray: videoState === 2 },
+    { id: '3', name: 'CDK2-08-X104', model: 'PAN 2500 HD', isActive: true, placeholder: 'Office+Feed', heightVariant: 'short' as const, showGray: videoState === 2 },
     { id: '4', name: 'DFL7-22-Y045', model: 'PAN 2500 HD', isActive: true, placeholder: 'Workshop+Feed', heightVariant: 'short' as const },
-    { id: '5', name: 'EGM9-31-Z067', model: 'PAN 2500 HD', isActive: true, placeholder: 'Front+Feed', heightVariant: 'full' as const },
+    { id: '5', name: 'EGM9-31-Z067', model: 'PAN 2500 HD', isActive: true, placeholder: 'Front+Feed', heightVariant: 'full' as const, showGray: videoState === 4 },
     { id: '6', name: 'FHN3-17-A129', model: 'PAN 2500 HD', isActive: true, placeholder: 'Outside2+Feed', heightVariant: 'short' as const },
     { id: '7', name: 'GJP5-26-B088', model: 'PAN 2500 HD', isActive: true, placeholder: 'Entrance+Feed', heightVariant: 'short' as const },
     { id: '8', name: 'HKQ8-13-C156', model: 'PAN 2500 HD', isActive: true, placeholder: 'Driveway+Feed', heightVariant: 'full' as const },

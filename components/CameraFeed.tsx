@@ -150,15 +150,10 @@ export default function CameraFeed({
 
   const getVideoSource = () => {
     // Use different video sets based on videoState
-    const dayVideos = ['/0823.mp4', '/0824.mp4'];
-    const nightVideos = ['/n5.mp4', '/black.mp4', '/n7.mp4', '/n3.mp4', '/n4.mp4', '/n1.mp4', '/n6.mp4', '/n2.mp4', '/n8.mp4'];
+    const dayVideos = ['/d-hall.mp4', '/d-hiss.mp4', '/d-kok.mp4', '/d-matsal.mp4', '/d-pool.mp4', '/d-sovrum.mp4', '/d-spa.mp4', '/d-ute.mp4', '/d-vardagsrum.mp4'];
+    const nightVideos = ['/n5.mp4', '/n4.mp4', '/n7.mp4', '/n3.mp4', '/n1.mp4', '/black.mp4', '/n6.mp4', '/n2.mp4', '/n8.mp4'];
     
-    const videos = videoState === 1 ? dayVideos : nightVideos;
-    
-    // Special case for night videos: camera ID 1 should always get black.mp4
-    if (videoState !== 1 && id === '1') {
-      return '/black.mp4';
-    }
+    const videos = (videoState === 1 || videoState === 2) ? dayVideos : nightVideos;
     
     return videos[parseInt(id) % videos.length] || videos[0];
   };
