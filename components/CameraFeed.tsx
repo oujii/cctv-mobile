@@ -37,6 +37,7 @@ export default function CameraFeed({
 
   // For future real video integration
   const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     // Simulate loading delay for placeholder
@@ -47,10 +48,110 @@ export default function CameraFeed({
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    // Set canvas dimensions to match video
+    const canvas = canvasRef.current;
+    const video = videoRef.current;
+    
+    if (canvas && video && !isLoading && !showGray) {
+      const updateCanvasSize = () => {
+        const rect = video.getBoundingClientRect();
+        canvas.width = rect.width || 300;
+        canvas.height = rect.height || 200;
+      };
+
+      // Set initial size
+      updateCanvasSize();
+
+      // Update on video load and resize
+      video.addEventListener('loadedmetadata', updateCanvasSize);
+      window.addEventListener('resize', updateCanvasSize);
+
+      return () => {
+        video.removeEventListener('loadedmetadata', updateCanvasSize);
+        window.removeEventListener('resize', updateCanvasSize);
+      };
+    }
+  }, [isLoading, showGray]);
+
+  useEffect(() => {
+    // Optimized CCTV Grain Effect using tile-based approach
+    const canvas = canvasRef.current;
+    if (!canvas || isLoading || showGray) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const GRAIN_INTENSITY = 0.10; // Intensity (0..1)
+    const TILE_WIDTH = 320;
+    const TILE_HEIGHT = 180;
+    
+    // Create off-screen canvas for grain tile
+    const offCanvas = document.createElement('canvas');
+    const offCtx = offCanvas.getContext('2d');
+    if (!offCtx) return;
+    
+    offCanvas.width = TILE_WIDTH;
+    offCanvas.height = TILE_HEIGHT;
+    
+    let animationId: number;
+    let lastTime = 0;
+
+    const generateGrain = (timestamp: number) => {
+      // Limit to ~30fps
+      if (timestamp - lastTime < 33) {
+        animationId = requestAnimationFrame(generateGrain);
+        return;
+      }
+      lastTime = timestamp;
+      
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+      
+      if (canvasWidth === 0 || canvasHeight === 0) {
+        animationId = requestAnimationFrame(generateGrain);
+        return;
+      }
+      
+      // Generate grain tile
+      const imageData = offCtx.createImageData(TILE_WIDTH, TILE_HEIGHT);
+      const data = imageData.data;
+      
+      for (let i = 0; i < TILE_WIDTH * TILE_HEIGHT; i++) {
+        const noise = (Math.random() * 255) | 0;
+        const offset = i << 2;
+        data[offset] = noise;     // Red
+        data[offset + 1] = noise; // Green  
+        data[offset + 2] = noise; // Blue
+        data[offset + 3] = 255;   // Alpha (opaque)
+      }
+      
+      offCtx.putImageData(imageData, 0, 0);
+      
+      // Draw scaled grain to main canvas
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+      ctx.globalAlpha = GRAIN_INTENSITY;
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(offCanvas, 0, 0, TILE_WIDTH, TILE_HEIGHT, 0, 0, canvasWidth, canvasHeight);
+      ctx.globalAlpha = 1;
+      
+      animationId = requestAnimationFrame(generateGrain);
+    };
+
+    // Start grain animation
+    animationId = requestAnimationFrame(generateGrain);
+
+    return () => {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+    };
+  }, [isLoading, showGray]);
+
   const getVideoSource = () => {
     // Use different video sets based on videoState
     const dayVideos = ['/0823.mp4', '/0824.mp4'];
-    const nightVideos = ['/n1.mp4', '/black.mp4', '/n2.mp4', '/n3.mp4', '/n4.mp4', '/n5.mp4', '/n6.mp4', '/n7.mp4'];
+    const nightVideos = ['/n1.mp4', '/black.mp4', '/n2.mp4', '/n3.mp4', '/n4.mp4', '/n5.mp4', '/n6.mp4', '/n7.mp4', '/n8.mp4'];
     
     const videos = videoState === 1 ? dayVideos : nightVideos;
     
@@ -92,19 +193,27 @@ export default function CameraFeed({
               className={`w-full ${getHeightClass()} bg-[#093] transition-all duration-300`}
             />
           ) : (
-            /* Real video feeds */
-            <video
-              ref={videoRef}
-              className={`w-full ${getHeightClass()} object-cover transition-all duration-300 ${
-                isActive ? 'opacity-100' : 'opacity-50'
-              }`}
-              autoPlay
-              muted
-              loop
-              playsInline
-              src={getVideoSource()}
-              onError={() => setHasError(true)}
-            />
+            /* Real video feeds with grain overlay */
+            <div className="relative">
+              <video
+                ref={videoRef}
+                className={`w-full ${getHeightClass()} object-cover transition-all duration-300 ${
+                  isActive ? 'opacity-100' : 'opacity-50'
+                }`}
+                autoPlay
+                muted
+                loop
+                playsInline
+                src={getVideoSource()}
+                onError={() => setHasError(true)}
+              />
+              {/* CCTV Grain Overlay */}
+              <canvas
+                ref={canvasRef}
+                className={`absolute inset-0 w-full ${getHeightClass()} pointer-events-none`}
+                style={{ mixBlendMode: 'overlay' }}
+              />
+            </div>
           )}
 
           {/* Gradient Overlay - skip for gray cameras */}
