@@ -14,6 +14,7 @@ interface CameraFeedProps {
   isExpanded?: boolean;
   isFocused?: boolean;
   showGray?: boolean;
+  videoState?: number; // 1=day videos, 2=night videos, 3=night videos + green
   onTap?: () => void;
 }
 
@@ -28,6 +29,7 @@ export default function CameraFeed({
   isExpanded = false,
   isFocused = false,
   showGray = false,
+  videoState = 1,
   onTap
 }: CameraFeedProps) {
   const [isLoading, setIsLoading] = useState(true);
@@ -46,8 +48,17 @@ export default function CameraFeed({
   }, []);
 
   const getVideoSource = () => {
-    // Use real videos for camera feeds
-    const videos = ['/0823.mp4', '/0824.mp4'];
+    // Use different video sets based on videoState
+    const dayVideos = ['/0823.mp4', '/0824.mp4'];
+    const nightVideos = ['/n1.mp4', '/black.mp4', '/n2.mp4', '/n3.mp4', '/n4.mp4', '/n5.mp4', '/n6.mp4', '/n7.mp4'];
+    
+    const videos = videoState === 1 ? dayVideos : nightVideos;
+    
+    // Special case for night videos: camera ID 1 should always get black.mp4
+    if (videoState !== 1 && id === '1') {
+      return '/black.mp4';
+    }
+    
     return videos[parseInt(id) % videos.length] || videos[0];
   };
 

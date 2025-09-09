@@ -15,8 +15,8 @@ Mock security camera mobile app for TV/film production. Built with Next.js 15.5.
 - **Files modified**: `app/dashboard/page.tsx`
 
 ### Camera System Enhancements
-- **6 camera feeds** total (up from 2)
-- **Mixed height variants**: 3 full height, 3 short height
+- **9 camera feeds** total (up from 6)
+- **Mixed height variants**: 4 full height, 5 short height
 - **3-state interaction system**:
   - Short → Full → Focused → Short (cycle)
   - Full → Focused → Short → Full (cycle)
@@ -43,18 +43,29 @@ Mock security camera mobile app for TV/film production. Built with Next.js 15.5.
 ## Camera Configuration
 
 ### Current Cameras
-1. **ADC6-10-M022** (full height, green `#093` background for greenscreen)
+1. **ADC6-10-M022** (full height, green `#093` background for greenscreen in night+green mode)
 2. **BDH4-15-S081** (full height, video)
 3. **CDK2-08-X104** (short height, video)
 4. **DFL7-22-Y045** (short height, video)
 5. **EGM9-31-Z067** (full height, video)
 6. **FHN3-17-A129** (short height, video)
+7. **GJP5-26-B088** (short height, video)
+8. **HKQ8-13-C156** (full height, video)
+9. **ILR1-29-D093** (short height, video)
 
 ### Video Files Location
 - **Path**: `public/` directory
 - **Current files**: `/0823.mp4`, `/0824.mp4`
 - **Rotation**: Videos rotate between cameras based on camera ID
 - **To update**: Modify `getVideoSource()` in `components/CameraFeed.tsx:48-51`
+
+### Hidden Video State System
+- **3-state toggle system** accessed via settings icon (cogwheel) in bottom navigation
+- **State 1 "day-videos"**: Normal video feeds, no green screen
+- **State 2 "night-videos"**: Alternative video set (currently same videos)
+- **State 3 "night-videos + green"**: Same as State 2 but with green `#093` background on first camera
+- **Hidden toggle**: No visual indicator of current state, cycles through states on settings icon click
+- **Files modified**: `app/dashboard/page.tsx`, `components/CameraFeed.tsx`
 
 ## Navigation & Authentication
 - **Logout**: Click VIGILANCE logo in dashboard to return to invitation screen
