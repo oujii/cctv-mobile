@@ -8,7 +8,8 @@ import CameraFeed from '@/components/CameraFeed';
 export default function Dashboard() {
   const [currentUser, setCurrentUser] = useState('');
   const [activeTab, setActiveTab] = useState('Security');
-  const [userState, setUserState] = useState(1); // 1-4 for the different states
+  const [activeUser, setActiveUser] = useState<'adam' | 'carl'>('adam'); // Who is "(You)"
+  const [otherUserOnline, setOtherUserOnline] = useState(false); // Other user's online status
   const [expandedCameras, setExpandedCameras] = useState<Set<string>>(new Set());
   const [focusedCamera, setFocusedCamera] = useState<string | null>(null);
   const [videoState, setVideoState] = useState(1); // 1=day videos, 2=day videos + green, 3=night videos, 4=night videos + green
@@ -34,7 +35,11 @@ export default function Dashboard() {
   };
 
   const handleUserTap = () => {
-    setUserState((prevState) => (prevState % 4) + 1);
+    setActiveUser((prevUser) => prevUser === 'adam' ? 'carl' : 'adam');
+  };
+
+  const handlePlusIconTap = () => {
+    setOtherUserOnline((prevStatus) => !prevStatus);
   };
 
   const handleVideoStateToggle = () => {
@@ -82,32 +87,16 @@ export default function Dashboard() {
   };
 
   const getUsersConfig = () => {
-    switch (userState) {
-      case 1:
-        return [
-          { name: 'Adam', role: '(You)', isOnline: true, avatar: '/user.png' },
-          { name: 'Carl', role: '(Admin)', isOnline: false, avatar: '/carl-icon.png' }
-        ];
-      case 2:
-        return [
-          { name: 'Adam', role: '(You)', isOnline: true, avatar: '/user.png' },
-          { name: 'Carl', role: '(Admin)', isOnline: true, avatar: '/carl-icon.png' }
-        ];
-      case 3:
-        return [
-          { name: 'Carl', role: '(You)', isOnline: true, avatar: '/carl-icon.png' },
-          { name: 'Adam', role: '(Guest)', isOnline: false, avatar: '/user.png' }
-        ];
-      case 4:
-        return [
-          { name: 'Carl', role: '(You)', isOnline: true, avatar: '/carl-icon.png' },
-          { name: 'Adam', role: '(Guest)', isOnline: true, avatar: '/user.png' }
-        ];
-      default:
-        return [
-          { name: 'Adam', role: '(You)', isOnline: true, avatar: '/user.png' },
-          { name: 'Carl', role: '(Admin)', isOnline: false, avatar: '/carl-icon.png' }
-        ];
+    if (activeUser === 'adam') {
+      return [
+        { name: 'Adam', role: '(You)', isOnline: true, avatar: '/user.png' },
+        { name: 'Carl', role: '(Admin)', isOnline: otherUserOnline, avatar: '/carl-icon.png' }
+      ];
+    } else {
+      return [
+        { name: 'Carl', role: '(You)', isOnline: true, avatar: '/carl-icon.png' },
+        { name: 'Adam', role: '(Guest)', isOnline: otherUserOnline, avatar: '/user.png' }
+      ];
     }
   };
 
@@ -167,9 +156,11 @@ export default function Dashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 00-5-5.917V5a1 1 0 00-2 0v.083A6 6 0 006 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
               </svg>
               {/* Plus Icon */}
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-              </svg>
+              <button onClick={handlePlusIconTap} className="hover:opacity-80 transition-opacity">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                </svg>
+              </button>
             </div>
           </div>
         </header>

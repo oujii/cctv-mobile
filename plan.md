@@ -6,12 +6,14 @@ Mock security camera mobile app for TV/film production. Built with Next.js 15.5.
 ## Completed Features
 
 ### User State Management (Dashboard)
-- **4-state user system** with tap cycling
-- State 1: Adam (You) Online, Carl (Admin) Offline
-- State 2: Both Adam (You) and Carl (Admin) Online  
-- State 3: Carl (You) Online, Adam (Guest) Offline
-- State 4: Both Carl (You) and Adam (Guest) Online
-- **Interactive**: Tap either user to cycle through states
+- **Simplified 2-function user system** for easier filming
+- **Function 1 - Name tap**: Switches active user "(You)" between Adam and Carl
+  - Adam (You - Guest) ↔ Carl (You - Admin)
+  - "(You)" is always Online
+- **Function 2 - Plus icon tap**: Toggles other user's online status
+  - If Adam is "(You)": Carl (Admin) toggles Online/Offline
+  - If Carl is "(You)": Adam (Guest) toggles Online/Offline
+- **Roles preserved**: Carl = Admin, Adam = Guest
 - **Files modified**: `app/dashboard/page.tsx`
 
 ### Camera System Enhancements
@@ -23,7 +25,7 @@ Mock security camera mobile app for TV/film production. Built with Next.js 15.5.
 - **Focus mode**: Dimmed background + enlarged view
 - **Camera IDs**: Professional format (ADC6-10-M022, JBS-AF-1080P, etc.)
 - **Model standardization**: All cameras show "PAN 2500 HD"
-- **Green camera**: First camera (ADC6-10-M022) shows solid green `#093` for greenscreen post-production
+- **Optimized grain effect**: Tile-based rendering for better performance
 - **Files modified**: `app/dashboard/page.tsx`, `components/CameraFeed.tsx`
 
 ### Dashboard Updates
@@ -43,28 +45,30 @@ Mock security camera mobile app for TV/film production. Built with Next.js 15.5.
 ## Camera Configuration
 
 ### Current Cameras
-1. **ADC6-10-M022** (full height, green `#093` background for greenscreen in night+green mode)
-2. **BDH4-15-S081** (full height, video)
-3. **CDK2-08-X104** (short height, video)
+1. **ADC6-10-M022** (full height, video)
+2. **BDH4-15-S081** (full height, green `#093` background in day+green mode)
+3. **CDK2-08-X104** (short height, green `#093` background in day+green mode)
 4. **DFL7-22-Y045** (short height, video)
-5. **EGM9-31-Z067** (full height, video)
-6. **FHN3-17-A129** (short height, video)
+5. **EGM9-31-Z067** (full height, green `#093` background in night+green mode)
+6. **FHN3-17-A129** (short height, black.mp4 in night modes)
 7. **GJP5-26-B088** (short height, video)
 8. **HKQ8-13-C156** (full height, video)
 9. **ILR1-29-D093** (short height, video)
 
 ### Video Files Location
 - **Path**: `public/` directory
-- **Current files**: `/0823.mp4`, `/0824.mp4`
+- **Day videos**: `d-hall.mp4`, `d-hiss.mp4`, `d-kok.mp4`, `d-matsal.mp4`, `d-pool.mp4`, `d-sovrum.mp4`, `d-spa.mp4`, `d-ute.mp4`, `d-vardagsrum.mp4`
+- **Night videos**: `n1.mp4`, `n2.mp4`, `n3.mp4`, `n4.mp4`, `n5.mp4`, `n6.mp4`, `n7.mp4`, `n8.mp4`, `black.mp4`
 - **Rotation**: Videos rotate between cameras based on camera ID
-- **To update**: Modify `getVideoSource()` in `components/CameraFeed.tsx:48-51`
+- **To update**: Modify `getVideoSource()` in `components/CameraFeed.tsx`
 
 ### Hidden Video State System
-- **3-state toggle system** accessed via settings icon (cogwheel) in bottom navigation
-- **State 1 "day-videos"**: Normal video feeds, no green screen
-- **State 2 "night-videos"**: Alternative video set (currently same videos)
-- **State 3 "night-videos + green"**: Same as State 2 but with green `#093` background on first camera
-- **Hidden toggle**: No visual indicator of current state, cycles through states on settings icon click
+- **4-state toggle system** accessed via settings icon (cogwheel) in bottom navigation
+- **State 1 "day-videos"**: Day video feeds, no green screen
+- **State 2 "day-videos + green"**: Day videos with green `#093` background on cameras 2&3 (d-kok, d-matsal)
+- **State 3 "night-videos"**: Night video feeds, no green screen
+- **State 4 "night-videos + green"**: Night videos with green `#093` background on camera 5
+- **Hidden toggle**: No visual indicator of current state, cycles through all 4 states on settings icon click
 - **Files modified**: `app/dashboard/page.tsx`, `components/CameraFeed.tsx`
 
 ## Navigation & Authentication
@@ -100,4 +104,4 @@ Mock security camera mobile app for TV/film production. Built with Next.js 15.5.
 - Real-time camera status updates
 
 ---
-*Last updated: 2025-08-26*
+*Last updated: 2025-09-10*
