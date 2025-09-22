@@ -15,6 +15,13 @@ export default function Dashboard() {
   const [videoState, setVideoState] = useState(1); // 1=day videos, 2=day videos + green, 3=night videos, 4=night videos + green
   const router = useRouter();
 
+  // Request notification permission on component mount
+  useEffect(() => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }, []);
+
   useEffect(() => {
     // Check if user is authenticated
     const isAuthenticated = localStorage.getItem('vigilance-auth');
@@ -44,6 +51,15 @@ export default function Dashboard() {
 
   const handleVideoStateToggle = () => {
     setVideoState((prevState) => (prevState % 4) + 1);
+  };
+
+  const handleNotificationTrigger = () => {
+    // Stealth notification trigger - 5 second delay
+    setTimeout(() => {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('Carl (owner) started watching');
+      }
+    }, 5000);
   };
 
   const handleCameraTap = (cameraId: string, heightVariant: 'short' | 'full') => {
@@ -304,8 +320,8 @@ export default function Dashboard() {
             {bottomNavItems.map((item, index) => (
               <button
                 key={item.name}
-                onClick={index === 3 ? handleVideoStateToggle : undefined} // Settings icon (last item) is clickable
-                className={`flex items-center justify-center py-1 ${item.active ? 'text-blue-500' : ''} ${index === 3 ? 'cursor-pointer' : ''}`}
+                onClick={index === 1 ? handleNotificationTrigger : index === 3 ? handleVideoStateToggle : undefined} // Events icon (index 1) triggers notification, Settings icon (last item) is clickable
+                className={`flex items-center justify-center py-1 ${item.active ? 'text-blue-500' : ''} ${(index === 1 || index === 3) ? 'cursor-pointer' : ''}`}
               >
                 <Image 
                   src={item.icon} 

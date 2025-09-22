@@ -86,7 +86,8 @@ Mock security camera mobile app for TV/film production. Built with Next.js 15.5.
 - `public/` - Video and image assets
 
 ### State Management
-- User states (4 configurations)
+- User states (2-function system: active user + other user online status)
+- Video states (4 configurations: day/night with/without green)
 - Camera expansion states (short/full/focused)
 - Focused camera tracking
 - Authentication state
