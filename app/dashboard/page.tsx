@@ -18,13 +18,19 @@ export default function Dashboard() {
   // Register service worker and request notification permission on component mount
   useEffect(() => {
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').then(() => {
-        console.log('Service Worker registered');
-      });
+      navigator.serviceWorker.register('/sw.js')
+        .then(() => {
+          console.log('Service Worker registered');
+        })
+        .catch((error) => {
+          console.error('Service Worker registration failed:', error);
+        });
     }
 
     if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission();
+      Notification.requestPermission().catch((error) => {
+        console.error('Notification permission request failed:', error);
+      });
     }
   }, []);
 
