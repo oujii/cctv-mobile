@@ -15,8 +15,14 @@ export default function Dashboard() {
   const [videoState, setVideoState] = useState(1); // 1=day videos, 2=day videos + green, 3=night videos, 4=night videos + green
   const router = useRouter();
 
-  // Request notification permission on component mount
+  // Register service worker and request notification permission on component mount
   useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then(() => {
+        console.log('Service Worker registered');
+      });
+    }
+
     if ('Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission();
     }
@@ -55,9 +61,20 @@ export default function Dashboard() {
 
   const handleNotificationTrigger = () => {
     // Stealth notification trigger - 5 second delay
-    setTimeout(() => {
+    setTimeout(async () => {
       if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification('Carl (owner) started watching');
+        // Use Service Worker API for Android compatibility
+        if ('serviceWorker' in navigator) {
+          const registration = await navigator.serviceWorker.ready;
+          registration.showNotification('Carl (owner) started watching', {
+            icon: '/icon-192x192.png',
+            badge: '/icon-72x72.png',
+            vibrate: [200, 100, 200]
+          });
+        } else {
+          // Fallback for browsers without service worker support
+          new Notification('Carl (owner) started watching');
+        }
       }
     }, 5000);
   };

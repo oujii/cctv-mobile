@@ -71,6 +71,16 @@ Mock security camera mobile app for TV/film production. Built with Next.js 15.5.
 - **Hidden toggle**: No visual indicator of current state, cycles through all 4 states on settings icon click
 - **Files modified**: `app/dashboard/page.tsx`, `components/CameraFeed.tsx`
 
+### Notification System
+- **Service Worker registered** for cross-platform notification support
+- **Trigger**: Click Events icon (second icon from left) in bottom navigation
+- **Delay**: 5 second delay before notification appears
+- **Message**: "Carl (owner) started watching"
+- **Android support**: Uses `registration.showNotification()` API for Android Chrome PWA compatibility
+- **iOS support**: Fallback to `new Notification()` for browsers without service worker
+- **Visual feedback**: Icon, badge, and vibration pattern included
+- **Files modified**: `app/dashboard/page.tsx`, `public/sw.js` (added)
+
 ## Navigation & Authentication
 - **Logout**: Click VIGILANCE logo in dashboard to return to invitation screen
 - **Login flow**: Invitation → Continue → Sign In → Dashboard
