@@ -66,13 +66,19 @@ export default function Dashboard() {
         // Use Service Worker API for Android compatibility
         if ('serviceWorker' in navigator) {
           const registration = await navigator.serviceWorker.ready;
-          registration.showNotification('Carl (owner) started watching', {
+          registration.showNotification('Vigilance', {
+            body: 'Carl (owner) started watching',
             icon: '/icon-192x192.png',
-            badge: '/icon-72x72.png'
+            badge: '/icon-72x72.png',
+            tag: 'vigilance-watching',
+            requireInteraction: false,
+            silent: false
           });
         } else {
           // Fallback for browsers without service worker support
-          new Notification('Carl (owner) started watching');
+          new Notification('Vigilance', {
+            body: 'Carl (owner) started watching'
+          });
         }
       }
     }, 5000);
