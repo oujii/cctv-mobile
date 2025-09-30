@@ -68,8 +68,7 @@ export default function Dashboard() {
           const registration = await navigator.serviceWorker.ready;
           registration.showNotification('Carl (owner) started watching', {
             icon: '/icon-192x192.png',
-            badge: '/icon-72x72.png',
-            vibrate: [200, 100, 200]
+            badge: '/icon-72x72.png'
           });
         } else {
           // Fallback for browsers without service worker support
