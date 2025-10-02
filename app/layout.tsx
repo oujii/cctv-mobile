@@ -12,7 +12,8 @@ export const metadata: Metadata = {
   description: "Professional home security monitoring system",
   manifest: "/manifest.json",
   themeColor: "#101828",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover",
+  applicationName: "Vigilance Security",
   icons: {
     icon: [
       { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
@@ -30,7 +31,8 @@ export const metadata: Metadata = {
   other: {
     "mobile-web-app-capable": "yes",
     "apple-mobile-web-app-capable": "yes",
-    "apple-mobile-web-app-status-bar-style": "black-translucent"
+    "apple-mobile-web-app-status-bar-style": "black-translucent",
+    "format-detection": "telephone=no"
   }
 };
 

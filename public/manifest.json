@@ -9,6 +9,7 @@
   "orientation": "portrait",
   "scope": "/",
   "categories": ["security", "utilities"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/icon-72x72.png",

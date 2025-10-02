@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vigilance-v1';
+const CACHE_NAME = 'vigilance-v2';
 const urlsToCache = [
   '/',
   '/login/',
@@ -10,10 +10,13 @@ const urlsToCache = [
   '/ic_baseline-home.png',
   '/mage_dashboard-fill.png',
   '/bxs_user.png',
-  '/mdi_cog.png'
+  '/mdi_cog.png',
+  '/icon-192x192.png',
+  '/icon-512x512.png'
 ];
 
 self.addEventListener('install', function(event) {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(function(cache) {
@@ -45,6 +48,13 @@ self.addEventListener('activate', function(event) {
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+  event.waitUntil(
+    clients.openWindow('/')
   );
 });

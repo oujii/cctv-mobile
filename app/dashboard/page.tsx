@@ -18,9 +18,10 @@ export default function Dashboard() {
   // Register service worker and request notification permission on component mount
   useEffect(() => {
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js')
-        .then(() => {
-          console.log('Service Worker registered');
+      navigator.serviceWorker.register('/sw.js', { scope: '/' })
+        .then((registration) => {
+          console.log('Service Worker registered:', registration);
+          return registration.update();
         })
         .catch((error) => {
           console.error('Service Worker registration failed:', error);
