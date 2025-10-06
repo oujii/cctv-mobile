@@ -44,6 +44,15 @@ Mock security camera mobile app for TV/film production. Built with Next.js 15.5.
 
 ## Camera Configuration
 
+### Manual Video Trigger (black.mp4)
+- **Trigger location**: Click "14/14 Active Cameras" text in System Status Dashboard
+- **Target video**: Only affects `black.mp4` (camera 6 in night modes)
+- **Behavior**: Resets video to 0:00 and starts playback
+- **Default state**: black.mp4 is paused until triggered
+- **Re-triggerable**: Can be clicked multiple times to restart from beginning
+- **Use case**: Precise timing control for film production
+- **Files modified**: `app/dashboard/page.tsx`, `components/CameraFeed.tsx`
+
 ### Current Cameras
 1. **ADC6-10-M022** (full height, video)
 2. **BDH4-15-S081** (full height, green `#093` background in day+green mode)
@@ -64,10 +73,10 @@ Mock security camera mobile app for TV/film production. Built with Next.js 15.5.
 
 ### Hidden Video State System
 - **4-state toggle system** accessed via settings icon (cogwheel) in bottom navigation
-- **State 1 "day-videos"**: Day video feeds, no green screen
-- **State 2 "day-videos + green"**: Day videos with green `#093` background on cameras 2&3 (d-kok, d-matsal)
-- **State 3 "night-videos"**: Night video feeds, no green screen
-- **State 4 "night-videos + green"**: Night videos with green `#093` background on camera 5
+- **State 1 "night-videos" (DEFAULT)**: Night video feeds, no green screen
+- **State 2 "night-videos + green"**: Night videos with green `#093` background on camera 5
+- **State 3 "day-videos"**: Day video feeds, no green screen
+- **State 4 "day-videos + green"**: Day videos with green `#093` background on cameras 2&3
 - **Hidden toggle**: No visual indicator of current state, cycles through all 4 states on settings icon click
 - **Files modified**: `app/dashboard/page.tsx`, `components/CameraFeed.tsx`
 
@@ -115,4 +124,4 @@ Mock security camera mobile app for TV/film production. Built with Next.js 15.5.
 - Real-time camera status updates
 
 ---
-*Last updated: 2025-09-10*
+*Last updated: 2025-10-06*

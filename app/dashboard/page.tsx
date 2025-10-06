@@ -13,6 +13,7 @@ export default function Dashboard() {
   const [expandedCameras, setExpandedCameras] = useState<Set<string>>(new Set());
   const [focusedCamera, setFocusedCamera] = useState<string | null>(null);
   const [videoState, setVideoState] = useState(1); // 1=day videos, 2=day videos + green, 3=night videos, 4=night videos + green
+  const [blackVideoTriggered, setBlackVideoTriggered] = useState(false);
   const router = useRouter();
 
   // Register service worker and request notification permission on component mount
@@ -64,6 +65,12 @@ export default function Dashboard() {
 
   const handleVideoStateToggle = () => {
     setVideoState((prevState) => (prevState % 4) + 1);
+  };
+
+  const handleBlackVideoTrigger = () => {
+    setBlackVideoTriggered(true);
+    // Reset trigger after a brief moment to allow re-triggering
+    setTimeout(() => setBlackVideoTriggered(false), 100);
   };
 
   const handleNotificationTrigger = () => {
@@ -154,10 +161,10 @@ export default function Dashboard() {
   // Mock camera data - in real app this would come from API
   const cameras = [
     { id: '1', name: 'ADC6-10-M022', model: 'PAN 2500 HD', isActive: true, placeholder: 'Garage+Feed', heightVariant: 'full' as const },
-    { id: '2', name: 'BDH4-15-S081', model: 'PAN 2500 HD', isActive: true, placeholder: 'Backyard+Feed', heightVariant: 'full' as const, showGray: videoState === 2 },
-    { id: '3', name: 'CDK2-08-X104', model: 'PAN 2500 HD', isActive: true, placeholder: 'Office+Feed', heightVariant: 'short' as const, showGray: videoState === 2 },
+    { id: '2', name: 'BDH4-15-S081', model: 'PAN 2500 HD', isActive: true, placeholder: 'Backyard+Feed', heightVariant: 'full' as const, showGray: videoState === 4 },
+    { id: '3', name: 'CDK2-08-X104', model: 'PAN 2500 HD', isActive: true, placeholder: 'Office+Feed', heightVariant: 'short' as const, showGray: videoState === 4 },
     { id: '4', name: 'DFL7-22-Y045', model: 'PAN 2500 HD', isActive: true, placeholder: 'Workshop+Feed', heightVariant: 'short' as const },
-    { id: '5', name: 'EGM9-31-Z067', model: 'PAN 2500 HD', isActive: true, placeholder: 'Front+Feed', heightVariant: 'full' as const, showGray: videoState === 4 },
+    { id: '5', name: 'EGM9-31-Z067', model: 'PAN 2500 HD', isActive: true, placeholder: 'Front+Feed', heightVariant: 'full' as const, showGray: videoState === 2 },
     { id: '6', name: 'FHN3-17-A129', model: 'PAN 2500 HD', isActive: true, placeholder: 'Outside2+Feed', heightVariant: 'short' as const },
     { id: '7', name: 'GJP5-26-B088', model: 'PAN 2500 HD', isActive: true, placeholder: 'Entrance+Feed', heightVariant: 'short' as const },
     { id: '8', name: 'HKQ8-13-C156', model: 'PAN 2500 HD', isActive: true, placeholder: 'Driveway+Feed', heightVariant: 'full' as const },
@@ -251,7 +258,7 @@ export default function Dashboard() {
           {/* System Status Dashboard */}
           <div className="bg-[#1D2939] rounded-2xl p-4 mb-4">
             <div className="flex justify-around text-center mb-4 border-b border-gray-700 pb-4">
-              <div>
+              <div onClick={handleBlackVideoTrigger} className="cursor-pointer">
                 <p className="text-lg font-semibold text-white">
                   {activeCameras} <span className="text-sm text-gray-400">/ {totalCameras}</span>
                 </p>
@@ -337,6 +344,7 @@ export default function Dashboard() {
                 isFocused={focusedCamera === camera.id}
                 showGray={camera.showGray}
                 videoState={videoState}
+                blackVideoTriggered={blackVideoTriggered}
                 onTap={() => handleCameraTap(camera.id, camera.heightVariant)}
               />
             ))}

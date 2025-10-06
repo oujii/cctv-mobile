@@ -15,6 +15,7 @@ interface CameraFeedProps {
   isFocused?: boolean;
   showGray?: boolean;
   videoState?: number; // 1=day videos, 2=night videos, 3=night videos + green
+  blackVideoTriggered?: boolean;
   onTap?: () => void;
 }
 
@@ -30,6 +31,7 @@ export default function CameraFeed({
   isFocused = false,
   showGray = false,
   videoState = 1,
+  blackVideoTriggered = false,
   onTap
 }: CameraFeedProps) {
   const [isLoading, setIsLoading] = useState(true);
@@ -47,6 +49,17 @@ export default function CameraFeed({
 
     return () => clearTimeout(timer);
   }, []);
+
+  // Handle black.mp4 manual trigger
+  useEffect(() => {
+    const video = videoRef.current;
+    const videoSource = getVideoSource();
+
+    if (video && blackVideoTriggered && videoSource === '/black.mp4') {
+      video.currentTime = 0;
+      video.play().catch(err => console.error('Failed to play black.mp4:', err));
+    }
+  }, [blackVideoTriggered]);
 
   useEffect(() => {
     // Set canvas dimensions to match video
@@ -152,9 +165,9 @@ export default function CameraFeed({
     // Use different video sets based on videoState
     const dayVideos = ['/d-hall.mp4', '/d-hiss.mp4', '/d-kok.mp4', '/d-matsal.mp4', '/d-pool.mp4', '/d-sovrum.mp4', '/d-spa.mp4', '/d-ute.mp4', '/d-vardagsrum.mp4'];
     const nightVideos = ['/n5.mp4', '/n4.mp4', '/n7.mp4', '/n3.mp4', '/n1.mp4', '/black.mp4', '/n6.mp4', '/n2.mp4', '/n8.mp4'];
-    
-    const videos = (videoState === 1 || videoState === 2) ? dayVideos : nightVideos;
-    
+
+    const videos = (videoState === 1 || videoState === 2) ? nightVideos : dayVideos;
+
     return videos[parseInt(id) % videos.length] || videos[0];
   };
 
@@ -195,7 +208,7 @@ export default function CameraFeed({
                 className={`w-full ${getHeightClass()} object-cover transition-all duration-300 ${
                   isActive ? 'opacity-100' : 'opacity-50'
                 }`}
-                autoPlay
+                autoPlay={getVideoSource() !== '/black.mp4'}
                 muted
                 loop
                 playsInline
