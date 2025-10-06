@@ -45,7 +45,7 @@ Mock security camera mobile app for TV/film production. Built with Next.js 15.5.
 ## Camera Configuration
 
 ### Manual Video Trigger (black.mp4)
-- **Trigger location**: Click "14/14 Active Cameras" text in System Status Dashboard
+- **Trigger location**: Click Services icon (user icon, third from left) in bottom navigation
 - **Target video**: Only affects `black.mp4` (camera 6 in night modes)
 - **Behavior**: Resets video to 0:00 and starts playback
 - **Default state**: black.mp4 is paused until triggered

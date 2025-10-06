@@ -258,7 +258,7 @@ export default function Dashboard() {
           {/* System Status Dashboard */}
           <div className="bg-[#1D2939] rounded-2xl p-4 mb-4">
             <div className="flex justify-around text-center mb-4 border-b border-gray-700 pb-4">
-              <div onClick={handleBlackVideoTrigger} className="cursor-pointer">
+              <div>
                 <p className="text-lg font-semibold text-white">
                   {activeCameras} <span className="text-sm text-gray-400">/ {totalCameras}</span>
                 </p>
@@ -357,8 +357,8 @@ export default function Dashboard() {
             {bottomNavItems.map((item, index) => (
               <button
                 key={item.name}
-                onClick={index === 1 ? handleNotificationTrigger : index === 3 ? handleVideoStateToggle : undefined} // Events icon (index 1) triggers notification, Settings icon (last item) is clickable
-                className={`flex items-center justify-center py-1 ${item.active ? 'text-blue-500' : ''} ${(index === 1 || index === 3) ? 'cursor-pointer' : ''}`}
+                onClick={index === 1 ? handleNotificationTrigger : index === 2 ? handleBlackVideoTrigger : index === 3 ? handleVideoStateToggle : undefined} // Events (index 1) triggers notification, Services (index 2) triggers black.mp4, Settings (index 3) toggles video state
+                className={`flex items-center justify-center py-1 ${item.active ? 'text-blue-500' : ''} ${(index === 1 || index === 2 || index === 3) ? 'cursor-pointer' : ''}`}
               >
                 <Image 
                   src={item.icon} 
