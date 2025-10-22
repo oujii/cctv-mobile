@@ -81,7 +81,7 @@ export default function Dashboard() {
         if ('serviceWorker' in navigator) {
           const registration = await navigator.serviceWorker.ready;
           registration.showNotification('Vigilance', {
-            body: 'Carl (owner) started watching',
+            body: 'CCTV monitoring needs your attention',
             icon: '/icon-192x192.png',
             badge: '/icon-72x72.png',
             tag: 'vigilance-watching',
@@ -91,7 +91,7 @@ export default function Dashboard() {
         } else {
           // Fallback for browsers without service worker support
           new Notification('Vigilance', {
-            body: 'Carl (owner) started watching'
+            body: 'CCTV monitoring needs your attention'
           });
         }
       }
