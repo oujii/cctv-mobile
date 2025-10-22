@@ -80,7 +80,7 @@ export default function Dashboard() {
         // Use Service Worker API for Android compatibility
         if ('serviceWorker' in navigator) {
           const registration = await navigator.serviceWorker.ready;
-          registration.showNotification('Vigilance', {
+          registration.showNotification('', {
             body: 'CCTV monitoring needs your attention',
             icon: '/icon-192x192.png',
             badge: '/icon-72x72.png',
@@ -90,7 +90,7 @@ export default function Dashboard() {
           });
         } else {
           // Fallback for browsers without service worker support
-          new Notification('Vigilance', {
+          new Notification('', {
             body: 'CCTV monitoring needs your attention'
           });
         }
